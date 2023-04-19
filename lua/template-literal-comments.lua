@@ -9,13 +9,15 @@ function M.setup()
   vim.treesitter.query.add_directive("set-template-literal-lang-from-comment!", function(match, _, bufnr, pred, metadata)
     local comment_node = match[pred[2]]
     if comment_node then
-      local comment = vim.treesitter.get_node_text(comment_node, bufnr)
-      local tag = comment:match'/%*%s*(%w+)%s*%*/'
-      if tag then
-        local language = tag:lower() == 'svg' and 'html'
-                      or vim.filetype.match { filename = 'a.'..tag }
-                      or tag:lower()
-        metadata.language = language
+      local success, comment = pcall(vim.treesitter.get_node_text, comment_node, bufnr)
+      if success then
+        local tag = comment:match'/%*%s*(%w+)%s*%*/'
+        if tag then
+          local language = tag:lower() == 'svg' and 'html'
+                        or vim.filetype.match { filename = 'a.'..tag }
+                        or tag:lower()
+          metadata.language = language
+        end
       end
     end
   end)
