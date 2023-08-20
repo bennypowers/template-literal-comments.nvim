@@ -1,12 +1,11 @@
 local M = {}
 
-function M.setup()
-  ---@param match *
-  ---@param _ *
-  ---@param bufnr number
-  ---@param pred string[]
-  ---@param metadata TSMetadata
-  vim.treesitter.query.add_directive("set-template-literal-lang-from-comment!", function(match, _, bufnr, pred, metadata)
+---@param match any
+---@param _ any
+---@param bufnr number
+---@param pred string[]
+---@param metadata TSMetadata
+local function set_template_literal_lang_from_comment(match, _, bufnr, pred, metadata)
     local comment_node = match[pred[2]]
     if comment_node then
       local success, comment = pcall(vim.treesitter.get_node_text, comment_node, bufnr)
@@ -16,12 +15,17 @@ function M.setup()
           local language = tag:lower() == 'svg' and 'html'
                         or vim.filetype.match { filename = 'a.'..tag }
                         or tag:lower()
-          metadata.language = language
+          metadata['injection.language'] = language
         end
       end
     end
-  end)
+  end
 
+function M.setup()
+  vim.treesitter.query.add_directive(
+    'set-template-literal-lang-from-comment!',
+    set_template_literal_lang_from_comment
+  )
 end
 
 return M
