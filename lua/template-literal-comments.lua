@@ -16,7 +16,7 @@ local function set_template_literal_lang_from_comment(match, _, bufnr, pred, met
                         or vim.filetype.match { filename = 'a.'..tag }
                         or tag:lower()
           metadata.language = language
-          metadata.injection.language = language
+          metadata['injection.language'] = language
         end
       end
     end
