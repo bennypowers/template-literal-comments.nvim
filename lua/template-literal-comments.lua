@@ -15,7 +15,6 @@ local function set_template_literal_lang_from_comment(match, _, bufnr, pred, met
           local language = tag:lower() == 'svg' and 'html'
                         or vim.filetype.match { filename = 'a.'..tag }
                         or tag:lower()
-          metadata.language = language
           metadata['injection.language'] = language
         end
       end
