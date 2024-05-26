@@ -15,6 +15,7 @@ local function set_template_literal_lang_from_comment(match, _, bufnr, pred, met
           local language = tag:lower() == 'svg' and 'html'
                         or vim.filetype.match { filename = 'a.'..tag }
                         or tag:lower()
+          metadata['injection.include-children'] = true
           metadata['injection.language'] = language
         end
       end
@@ -24,7 +25,8 @@ local function set_template_literal_lang_from_comment(match, _, bufnr, pred, met
 function M.setup()
   vim.treesitter.query.add_directive(
     'set-template-literal-lang-from-comment!',
-    set_template_literal_lang_from_comment
+    set_template_literal_lang_from_comment,
+    {}
   )
 end
 
